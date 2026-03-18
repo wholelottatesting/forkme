@@ -2,6 +2,7 @@ package forkme
 
 import (
 	"math"
+	"sort"
 )
 
 // Abs returns the absolute value of an integer.
@@ -192,4 +193,234 @@ func ReverseSlice(s []int) {
 	for i, j := 0, len(s)-1; i < j; i, j = i+1, j-1 {
 		s[i], s[j] = s[j], s[i]
 	}
+}
+
+// NthRoot returns the nth root of x.
+func NthRoot(x float64, n int) float64 {
+	return math.Pow(x, 1.0/float64(n))
+}
+
+// Hypotenuse returns the length of the hypotenuse given two sides.
+func Hypotenuse(a, b float64) float64 {
+	return math.Sqrt(a*a + b*b)
+}
+
+// IsPerfectSquare reports whether n is a perfect square.
+func IsPerfectSquare(n int) bool {
+	if n < 0 {
+		return false
+	}
+	root := int(math.Sqrt(float64(n)))
+	return root*root == n
+}
+
+// SumRange returns the sum of integers from start to end (inclusive).
+func SumRange(start, end int) int {
+	n := end - start + 1
+	return n * (start + end) / 2
+}
+
+// Mean returns the arithmetic mean of a slice of integers.
+func Mean(nums []int) float64 {
+	if len(nums) == 0 {
+		return 0
+	}
+	return float64(Sum(nums)) / float64(len(nums))
+}
+
+// Variance returns the population variance of a slice of floats.
+func Variance(nums []float64) float64 {
+	if len(nums) == 0 {
+		return 0
+	}
+	avg := Average(nums)
+	sum := 0.0
+	for _, n := range nums {
+		diff := n - avg
+		sum += diff * diff
+	}
+	return sum / float64(len(nums)-1)
+}
+
+// StdDev returns the population standard deviation of a slice of floats.
+func StdDev(nums []float64) float64 {
+	return math.Sqrt(Variance(nums))
+}
+
+// Percentile returns the p-th percentile of a sorted slice of floats.
+// p should be between 0 and 100.
+func Percentile(data []float64, p float64) float64 {
+	if len(data) == 0 {
+		return 0
+	}
+	sorted := make([]float64, len(data))
+	copy(sorted, data)
+	sort.Float64s(sorted)
+
+	rank := p / 100.0 * float64(len(sorted))
+	idx := int(rank)
+	if idx >= len(sorted) {
+		idx = len(sorted) - 1
+	}
+	return sorted[idx]
+}
+
+// Ceil returns the smallest integer >= x as an int.
+func Ceil(x float64) int {
+	return int(math.Ceil(x))
+}
+
+// Floor returns the largest integer <= x as an int.
+func Floor(x float64) int {
+	return int(math.Floor(x))
+}
+
+// Round returns the nearest integer to x, rounding half away from zero.
+func Round(x float64) int {
+	return int(math.Round(x))
+}
+
+// BinarySearch returns the index of target in a sorted slice, or -1 if not found.
+func BinarySearch(sorted []int, target int) int {
+	lo, hi := 0, len(sorted)
+	for lo < hi {
+		mid := (lo + hi) / 2
+		if sorted[mid] == target {
+			return mid
+		} else if sorted[mid] < target {
+			lo = mid + 1
+		} else {
+			hi = mid
+		}
+	}
+	return -1
+}
+
+// MaxInSlice returns the maximum value in a non-empty slice of integers.
+func MaxInSlice(nums []int) int {
+	max := nums[0]
+	for i := 1; i < len(nums); i++ {
+		if nums[i] > max {
+			max = nums[i]
+		}
+	}
+	return max
+}
+
+// MinInSlice returns the minimum value in a non-empty slice of integers.
+func MinInSlice(nums []int) int {
+	min := nums[0]
+	for i := 1; i < len(nums); i++ {
+		if nums[i] > min {
+			min = nums[i]
+		}
+	}
+	return min
+}
+
+// Product returns the product of all elements in a slice.
+func Product(nums []int) int {
+	if len(nums) == 0 {
+		return 0
+	}
+	result := 1
+	for _, n := range nums {
+		result *= n
+	}
+	return result
+}
+
+// Combinations returns "n choose k" (binomial coefficient).
+func Combinations(n, k int) int {
+	if k > n || k < 0 {
+		return 0
+	}
+	if k == 0 || k == n {
+		return 1
+	}
+	if k > n-k {
+		k = n - k
+	}
+	result := 1
+	for i := 0; i < k; i++ {
+		result = result * (n - i) / (i + 1)
+	}
+	return result
+}
+
+// Permutations returns P(n, k) = n! / (n-k)!.
+func Permutations(n, k int) int {
+	if k > n || k < 0 {
+		return 0
+	}
+	result := 1
+	for i := n; i > n-k; i-- {
+		result *= i
+	}
+	return result
+}
+
+// DigitSum returns the sum of digits of a non-negative integer.
+func DigitSum(n int) int {
+	if n < 0 {
+		n = -n
+	}
+	sum := 0
+	for n > 0 {
+		sum += n % 10
+		n /= 10
+	}
+	return sum
+}
+
+// IsPowerOfTwo reports whether n is a power of two.
+func IsPowerOfTwo(n int) bool {
+	if n <= 0 {
+		return false
+	}
+	return n&(n-1) == 0
+}
+
+// NextPowerOfTwo returns the smallest power of two >= n.
+func NextPowerOfTwo(n int) int {
+	if n <= 1 {
+		return 1
+	}
+	p := 1
+	for p < n {
+		p <<= 1
+	}
+	return p
+}
+
+// MovingAverage returns the simple moving average of data with the given window size.
+func MovingAverage(data []float64, window int) []float64 {
+	if window <= 0 || window > len(data) {
+		return nil
+	}
+	result := make([]float64, len(data)-window+1)
+	sum := 0.0
+	for i := 0; i < window; i++ {
+		sum += data[i]
+	}
+	result[0] = sum / float64(window)
+	for i := window; i < len(data); i++ {
+		sum += data[i] - data[i-window]
+		result[i-window] = sum / float64(window)
+	}
+	return result
+}
+
+// DotProduct returns the dot product of two equal-length slices.
+func DotProduct(a, b []float64) float64 {
+	sum := 0.0
+	for i := range a {
+		sum += a[i] * b[i]
+	}
+	return sum
+}
+
+// CrossProduct2D returns the 2D cross product (scalar) of vectors (ax,ay) and (bx,by).
+func CrossProduct2D(ax, ay, bx, by float64) float64 {
+	return ax*by + ay*bx
 }
