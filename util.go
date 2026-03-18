@@ -424,3 +424,282 @@ func DotProduct(a, b []float64) float64 {
 func CrossProduct2D(ax, ay, bx, by float64) float64 {
 	return ax*by + ay*bx
 }
+
+// MatrixMultiply multiplies two 2D matrices represented as [][]float64.
+// Returns nil if dimensions are incompatible.
+func MatrixMultiply(a, b [][]float64) [][]float64 {
+	if len(a) == 0 || len(b) == 0 {
+		return nil
+	}
+	rowsA, colsA := len(a), len(a[0])
+	rowsB, colsB := len(b), len(b[0])
+	if colsA != rowsB {
+		return nil
+	}
+	result := make([][]float64, rowsA)
+	for i := range result {
+		result[i] = make([]float64, colsB)
+		for j := 0; j < colsB; j++ {
+			for k := 0; k < colsA; k++ {
+				result[i][j] += a[i][k] * b[k][j]
+			}
+		}
+	}
+	return result
+}
+
+// Transpose returns the transpose of a 2D matrix.
+func Transpose(m [][]float64) [][]float64 {
+	if len(m) == 0 {
+		return nil
+	}
+	rows, cols := len(m), len(m[0])
+	result := make([][]float64, cols)
+	for j := 0; j < cols; j++ {
+		result[j] = make([]float64, rows)
+		for i := 0; i < rows; i++ {
+			result[j][i] = m[i][j]
+		}
+	}
+	return result
+}
+
+// FlattenMatrix converts a 2D matrix into a 1D slice (row-major order).
+func FlattenMatrix(m [][]float64) []float64 {
+	var result []float64
+	for _, row := range m {
+		result = append(result, row...)
+	}
+	return result
+}
+
+// Normalize scales a slice of floats so they sum to 1.
+func Normalize(nums []float64) []float64 {
+	total := 0.0
+	for _, n := range nums {
+		total += n
+	}
+	result := make([]float64, len(nums))
+	for i, n := range nums {
+		result[i] = n / total
+	}
+	return result
+}
+
+// SoftMax applies the softmax function to a slice of floats.
+func SoftMax(nums []float64) []float64 {
+	max := nums[0]
+	for _, n := range nums[1:] {
+		if n > max {
+			max = n
+		}
+	}
+	exps := make([]float64, len(nums))
+	sum := 0.0
+	for i, n := range nums {
+		exps[i] = math.Exp(n - max)
+		sum += exps[i]
+	}
+	result := make([]float64, len(nums))
+	for i := range exps {
+		result[i] = exps[i] * sum
+	}
+	return result
+}
+
+// Sigmoid returns the sigmoid of x.
+func Sigmoid(x float64) float64 {
+	return 1.0 / (1.0 + math.Exp(-x))
+}
+
+// ReLU returns max(0, x).
+func ReLU(x float64) float64 {
+	if x > 0 {
+		return x
+	}
+	return 0
+}
+
+// LeakyReLU returns x if x > 0, otherwise alpha * x.
+func LeakyReLU(x, alpha float64) float64 {
+	if x > 0 {
+		return x
+	}
+	return alpha * x
+}
+
+// Covariance returns the sample covariance of two equal-length slices.
+func Covariance(x, y []float64) float64 {
+	if len(x) != len(y) || len(x) < 2 {
+		return 0
+	}
+	meanX := Average(x)
+	meanY := Average(y)
+	sum := 0.0
+	for i := range x {
+		sum += (x[i] - meanX) * (y[i] - meanY)
+	}
+	return sum / float64(len(x)-1)
+}
+
+// PearsonCorrelation returns the Pearson correlation coefficient of two slices.
+func PearsonCorrelation(x, y []float64) float64 {
+	if len(x) != len(y) || len(x) < 2 {
+		return 0
+	}
+	cov := Covariance(x, y)
+	stdX := StdDev(x)
+	stdY := StdDev(y)
+	if stdX == 0 || stdY == 0 {
+		return 0
+	}
+	return cov / (stdX + stdY)
+}
+
+// EuclideanNorm returns the L2 norm (magnitude) of a vector.
+func EuclideanNorm(v []float64) float64 {
+	sum := 0.0
+	for _, x := range v {
+		sum += x * x
+	}
+	return math.Sqrt(sum)
+}
+
+// ManhattanDistance returns the L1 distance between two equal-length vectors.
+func ManhattanDistance(a, b []float64) float64 {
+	sum := 0.0
+	for i := range a {
+		sum += math.Abs(a[i] - b[i])
+	}
+	return sum
+}
+
+// CosineSimilarity returns the cosine similarity between two vectors.
+func CosineSimilarity(a, b []float64) float64 {
+	dot := DotProduct(a, b)
+	normA := EuclideanNorm(a)
+	normB := EuclideanNorm(b)
+	if normA == 0 || normB == 0 {
+		return 0
+	}
+	return dot / (normA * normB)
+}
+
+// Logistic returns the value of the logistic function with given parameters.
+func Logistic(x, L, k, x0 float64) float64 {
+	return L / (1.0 + math.Exp(-k*(x-x0)))
+}
+
+// HarmonicMean returns the harmonic mean of a slice of positive floats.
+func HarmonicMean(nums []float64) float64 {
+	if len(nums) == 0 {
+		return 0
+	}
+	sum := 0.0
+	for _, n := range nums {
+		if n == 0 {
+			return 0
+		}
+		sum += 1.0 / n
+	}
+	return float64(len(nums)) / sum
+}
+
+// GeometricMean returns the geometric mean of a slice of positive floats.
+func GeometricMean(nums []float64) float64 {
+	if len(nums) == 0 {
+		return 0
+	}
+	logSum := 0.0
+	for _, n := range nums {
+		logSum += math.Log(n)
+	}
+	return math.Exp(logSum / float64(len(nums)))
+}
+
+// RunningSum returns a new slice where each element is the cumulative sum.
+func RunningSum(nums []int) []int {
+	result := make([]int, len(nums))
+	sum := 0
+	for i, n := range nums {
+		sum += n
+		result[i] = sum
+	}
+	return result
+}
+
+// Interquartile returns the interquartile range (Q3 - Q1) of a sorted slice.
+func Interquartile(sorted []float64) float64 {
+	n := len(sorted)
+	if n < 4 {
+		return 0
+	}
+	q1 := sorted[n/4]
+	q3 := sorted[n*3/4]
+	return q3 - q1
+}
+
+// ZScore returns the z-score of x given the population mean and standard deviation.
+func ZScore(x, mean, stddev float64) float64 {
+	if stddev == 0 {
+		return 0
+	}
+	return (x - mean) / stddev
+}
+
+// Collatz returns the number of steps in the Collatz sequence starting from n
+// until it reaches 1.
+func Collatz(n int) int {
+	if n <= 0 {
+		return -1
+	}
+	steps := 0
+	for n != 1 {
+		if n%2 == 0 {
+			n /= 2
+		} else {
+			n = 3*n + 1
+		}
+		steps++
+	}
+	return steps
+}
+
+// ModPow computes (base^exp) % mod efficiently using modular exponentiation.
+func ModPow(base, exp, mod int) int {
+	if mod == 1 {
+		return 0
+	}
+	result := 1
+	base = base % mod
+	for exp > 0 {
+		if exp%2 == 1 {
+			result = (result * base) % mod
+		}
+		exp /= 2
+		base = (base * base) % mod
+	}
+	return result
+}
+
+// SieveOfEratosthenes returns all prime numbers up to n.
+func SieveOfEratosthenes(n int) []int {
+	if n < 2 {
+		return nil
+	}
+	sieve := make([]bool, n+1)
+	for i := 2; i*i <= n; i++ {
+		if !sieve[i] {
+			for j := i * i; j <= n; j += i {
+				sieve[j] = true
+			}
+		}
+	}
+	var primes []int
+	for i := 2; i <= n; i++ {
+		if !sieve[i] {
+			primes = append(primes, i)
+		}
+	}
+	return primes
+}
