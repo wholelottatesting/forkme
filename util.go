@@ -703,3 +703,8 @@ func SieveOfEratosthenes(n int) []int {
 	}
 	return primes
 }
+
+// Midpoint returns the midpoint between two values.
+func Midpoint(a, b float64) float64 {
+	return (a + b) / 2.0
+}
