@@ -3,6 +3,8 @@
 > A minimal, highly forkable starter repository.
 
 > Fork me once, shame on you; fork me twice — now you're getting it. 🍴
+>
+> This repo pushed itself onto the main branch of my heart. 💕
 
 ## Overview
 
