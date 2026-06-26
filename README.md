@@ -2,8 +2,7 @@
 
 > A minimal, highly forkable starter repository.
 
-> Why did the developer bring a spoon to the repo? They heard it was the only
-> one without a fork. 🍴 You, however, are encouraged to bring one.
+> Fork me once, shame on you; fork me twice — now you're getting it. 🍴
 
 ## Overview
 
