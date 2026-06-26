@@ -2,6 +2,9 @@
 
 > A minimal, highly forkable starter repository.
 
+> Why did the developer bring a spoon to the repo? They heard it was the only
+> one without a fork. 🍴 You, however, are encouraged to bring one.
+
 ## Overview
 
 `forkme` is a deliberately small, open-source template meant to be forked as the
