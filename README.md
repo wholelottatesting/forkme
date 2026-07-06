@@ -1,5 +1,7 @@
 # forkme
 
+> Batteries-included utilities you'd otherwise rewrite in every project.
+
 **A collection of really useful string, array, map, set, and math utilities — implemented in common languages like Go, Python, and more.**
 
 `forkme` is a multi-language utility library. The same well-tested helpers you reach for every day — chunking an array, deduplicating a slice, merging maps, clamping a number — implemented idiomatically in each language, with a consistent API and behavior across all of them.
